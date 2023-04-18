@@ -1,0 +1,13 @@
+{
+    "imports": {},
+    "tasks": {
+        "dev": "deno run --watch src/main.ts"
+    },
+    "fmt": {
+        "options": {
+            "indentWidth": 4,
+            "singleQuote": true,
+            "semiColons": false
+        }
+    }
+}
