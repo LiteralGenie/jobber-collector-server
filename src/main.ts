@@ -1,9 +1,30 @@
-import { Application } from 'https://deno.land/x/oak@v12.2.0/mod.ts'
+import db from './db.ts'
+import { oak, sqlite } from './deps.ts'
+import paths from './paths.ts'
 
-const app = new Application()
+async function main() {
+    const app = new oak.Application()
 
-app.use((ctx) => {
-    ctx.response.body = 'Hello World!'
-})
+    app.use((ctx) => {
+        const conn = db.connect()
 
-await app.listen({ port: 8000 })
+        conn.query(
+            `
+            INSERT INTO indeed_posts
+            (id, createdAt, updatedAt, company, companyId, textContent, title) VALUES
+            (?, ?, ?, ?, ?, ?, ?)
+        `,
+            ['ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah'],
+        )
+
+        ctx.response.body = 'Hello World!'
+
+        conn.close()
+    })
+
+    await app.listen({ port: 8000 })
+}
+
+paths.init()
+db.createTables()
+main()
