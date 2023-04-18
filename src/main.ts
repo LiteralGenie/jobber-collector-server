@@ -1,7 +1,10 @@
 import db from './db.ts'
-import { oak } from './deps.ts'
+import { oak, oak_logger } from './deps.ts'
+import log from './log.ts'
 import { IndeedPost } from './models/index.ts'
 import paths from './paths.ts'
+
+const LOG = log.get({ name: 'main' })
 
 async function main() {
     await setup()
@@ -29,10 +32,12 @@ async function run() {
                     data: post,
                     isNew,
                 }
+                LOG.debug(body, ctx.response.body)
             }),
         )
 
     const app = new oak.Application()
+        .use(oak_logger.responseTime)
         .use(router.routes())
         .use(router.allowedMethods())
 

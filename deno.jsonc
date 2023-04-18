@@ -16,7 +16,11 @@
         "rules": {
             "exclude": [
                 // Because of "withConn(...)"
-                "require-await"
+                "require-await",
+                // Because vscode already highlights this
+                "no-unused-vars",
+                // Because trust me
+                "no-explicit-any"
             ]
         }
     },
