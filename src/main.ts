@@ -1,30 +1,42 @@
 import db from './db.ts'
-import { oak, sqlite } from './deps.ts'
+import { oak } from './deps.ts'
+import { IndeedPost } from './models/index.ts'
 import paths from './paths.ts'
 
 async function main() {
-    const app = new oak.Application()
+    await setup()
+    await run()
+}
 
-    app.use((ctx) => {
-        const conn = db.connect()
+async function setup() {
+    paths.init()
+    db.createTables()
+}
 
-        conn.query(
-            `
-            INSERT INTO indeed_posts
-            (id, createdAt, updatedAt, company, companyId, textContent, title) VALUES
-            (?, ?, ?, ?, ?, ?, ?)
-        `,
-            ['ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah'],
+async function run() {
+    const router = new oak.Router()
+        // Upsert indeed post
+        .post(
+            '/post',
+            db.withConn(async (ctx, conn) => {
+                const body = await ctx.request.body({ type: 'json' })
+                    .value as IndeedPost.Raw
+                const [post, isNew] = IndeedPost.upsert(
+                    IndeedPost.Model.fromRaw(body),
+                    conn,
+                )
+                ctx.response.body = {
+                    data: post,
+                    isNew,
+                }
+            }),
         )
 
-        ctx.response.body = 'Hello World!'
-
-        conn.close()
-    })
+    const app = new oak.Application()
+        .use(router.routes())
+        .use(router.allowedMethods())
 
     await app.listen({ port: 8000 })
 }
 
-paths.init()
-db.createTables()
 main()

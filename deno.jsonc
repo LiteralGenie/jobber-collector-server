@@ -11,5 +11,16 @@
         "files": {
             "exclude": ["complaints.md"]
         }
+    },
+    "lint": {
+        "rules": {
+            "exclude": [
+                // Because of "withConn(...)"
+                "require-await"
+            ]
+        }
+    },
+    "compilerOptions": {
+        "noUncheckedIndexedAccess": true
     }
 }
