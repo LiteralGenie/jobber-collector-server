@@ -9,11 +9,12 @@ export function initTable(conn: sqlite.DB) {
             
             company         TEXT        NOT NULL,
             companyId       TEXT,
+            html            TEXT        NOT NULL,
             textContent     TEXT        NOT NULL,
             title           TEXT        NOT NULL,
 
             PRIMARY KEY (id)
-        )
+        ) STRICT;
     `)
 }
 
@@ -22,6 +23,7 @@ export interface Raw {
 
     company: string
     companyId?: string
+    html: string
     textContent: string
     title: string
 }
@@ -30,8 +32,10 @@ type ModelProps = {
     id: string
     createdAt: string
     updatedAt: string
+
     company: string
     companyId: string | null
+    html: string
     textContent: string
     title: string
 }
@@ -40,8 +44,10 @@ export class Model implements ModelProps {
     id!: string
     createdAt!: string
     updatedAt!: string
+
     company!: string
     companyId!: string | null
+    html!: string
     textContent!: string
     title!: string
 
@@ -74,8 +80,8 @@ export function upsert(data: Model, conn: sqlite.DB): [Model, boolean] {
     conn.query(
         `
             INSERT OR REPLACE INTO indeed_posts
-            (id, createdAt, updatedAt, company, companyId, textContent, title) VALUES
-            (:id, :createdAt, :updatedAt, :company, :companyId, :textContent, :title)
+            (id, createdAt, updatedAt, company, companyId, html, textContent, title) VALUES
+            (:id, :createdAt, :updatedAt, :company, :companyId, :html, :textContent, :title)
         `,
         update,
     )
