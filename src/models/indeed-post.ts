@@ -67,7 +67,12 @@ export class Model implements ModelProps {
 }
 
 export function upsert(data: Model, conn: sqlite.DB): [Model, boolean] {
-    let update = { ...data, updatedAt: new Date().toISOString() }
+    const now = new Date()
+    let update = {
+        ...data,
+        updatedAt: now.toISOString(),
+        createdAt: now.toISOString(),
+    }
 
     const old = conn.queryEntries<ModelProps>(
         `SELECT * FROM indeed_posts WHERE id = ?`,

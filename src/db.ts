@@ -1,4 +1,3 @@
-import { Context } from 'https://deno.land/x/oak@v12.2.0/mod.ts'
 import { oak, sqlite } from './deps.ts'
 import paths from './paths.ts'
 import { IndeedPost } from './models/index.ts'
