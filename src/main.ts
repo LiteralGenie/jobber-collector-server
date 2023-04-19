@@ -32,6 +32,13 @@ async function run() {
                     data: post,
                     isNew,
                 }
+                LOG.info(
+                    `${
+                        isNew
+                            ? 'Created'
+                            : 'Updated'
+                    } | ${body.title} (${body.id})`,
+                )
                 LOG.debug(body, ctx.response.body)
             }),
         )
